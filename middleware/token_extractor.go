@@ -8,7 +8,7 @@ import (
 
 	"github.com/petersonsalme/golang-rest-api/model"
 
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 // ExtractToken should extract token from request

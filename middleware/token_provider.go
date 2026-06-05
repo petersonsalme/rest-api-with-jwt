@@ -3,7 +3,7 @@ package middleware
 import (
 	"os"
 
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/petersonsalme/golang-rest-api/model"
 )
 
