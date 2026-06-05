@@ -3,9 +3,9 @@ module github.com/petersonsalme/golang-rest-api
 go 1.14
 
 require (
-	github.com/golang-jwt/jwt/v5 v5.2.1
-	github.com/gin-gonic/gin v1.6.3
+	github.com/gin-gonic/gin v1.7.7
 	github.com/go-redis/redis v6.15.9+incompatible
+	github.com/golang-jwt/jwt/v5 v5.2.2
 	github.com/joho/godotenv v1.3.0
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/myesui/uuid v1.0.0 // indirect
