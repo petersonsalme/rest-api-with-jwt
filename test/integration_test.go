@@ -120,4 +120,33 @@ func TestIntegration(t *testing.T) {
 	req, _ = http.NewRequest("POST", "/logout", bytes.NewBuffer([]byte{}))
 	req.Header.Set("Authorization", "Bearer "+accessToken)
 	r.ServeHTTP(w, req)
+
+	// Test Logout again (should fail because token is deleted)
+	w = httptest.NewRecorder()
+	req, _ = http.NewRequest("POST", "/logout", bytes.NewBuffer([]byte{}))
+	req.Header.Set("Authorization", "Bearer "+accessToken)
+	r.ServeHTTP(w, req)
+
+	// Test Token Refresh again (should fail because refresh token is deleted)
+	w = httptest.NewRecorder()
+	req, _ = http.NewRequest("POST", "/token/refresh", bytes.NewBuffer(body))
+	req.Header.Set("Content-Type", "application/json")
+	r.ServeHTTP(w, req)
+
+	// Test Token Refresh with valid token but deleted from Redis
+	// (handled by the previous test)
+
+	// Test CreateTodo with valid token but deleted from Redis
+	w = httptest.NewRecorder()
+	req, _ = http.NewRequest("POST", "/todo", bytes.NewBuffer([]byte("{}")))
+	req.Header.Set("Authorization", "Bearer "+accessToken)
+	req.Header.Set("Content-Type", "application/json")
+	r.ServeHTTP(w, req)
+
+	// Test ExtractToken with wrong Authorization scheme
+	w = httptest.NewRecorder()
+	req, _ = http.NewRequest("POST", "/todo", bytes.NewBuffer([]byte("{}")))
+	req.Header.Set("Authorization", "Basic "+accessToken)
+	req.Header.Set("Content-Type", "application/json")
+	r.ServeHTTP(w, req)
 }
