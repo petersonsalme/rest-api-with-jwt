@@ -9,6 +9,11 @@ on:
 jobs:
   test-and-quality:
     runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis:6
+        ports:
+          - 6379:6379
     steps:
     - uses: actions/checkout@v3
 

@@ -1,0 +1,81 @@
+package test
+
+import (
+	"bytes"
+	"encoding/json"
+	"net/http"
+	"net/http/httptest"
+	"os"
+	"testing"
+
+	"github.com/gin-gonic/gin"
+	"github.com/petersonsalme/golang-rest-api/middleware"
+	"github.com/petersonsalme/golang-rest-api/redis"
+	"github.com/petersonsalme/golang-rest-api/router"
+)
+
+func setupRouter() *gin.Engine {
+	r := gin.Default()
+	r.POST("/login", router.Login)
+	r.POST("/logout", middleware.TokenAuthMiddleware(), router.Logout)
+	r.POST("/token/refresh", middleware.Refresh)
+	r.POST("/todo", middleware.TokenAuthMiddleware(), router.CreateTodo)
+	return r
+}
+
+func TestIntegration(t *testing.T) {
+	os.Setenv("ACCESS_SECRET", "jdnfksdmfksd")
+	os.Setenv("REFRESH_SECRET", "mcmvmkmsdnfsd")
+	os.Setenv("REDIS_DSN", "localhost:6379")
+	redis.Connect()
+
+	r := setupRouter()
+
+	// Test Login invalid JSON
+	w := httptest.NewRecorder()
+	req, _ := http.NewRequest("POST", "/login", bytes.NewBuffer([]byte(`{`)))
+	r.ServeHTTP(w, req)
+
+	// Test Login valid
+	loginData := map[string]string{
+		"username": "username",
+		"password": "password",
+	}
+	body, _ := json.Marshal(loginData)
+	w = httptest.NewRecorder()
+	req, _ = http.NewRequest("POST", "/login", bytes.NewBuffer(body))
+	req.Header.Set("Content-Type", "application/json")
+	r.ServeHTTP(w, req)
+
+	var tokens map[string]string
+	json.Unmarshal(w.Body.Bytes(), &tokens)
+	accessToken := tokens["access_token"]
+	refreshToken := tokens["refresh_token"]
+
+	// Test CreateTodo valid
+	todoData := map[string]string{
+		"title": "Buy milk",
+	}
+	body, _ = json.Marshal(todoData)
+	w = httptest.NewRecorder()
+	req, _ = http.NewRequest("POST", "/todo", bytes.NewBuffer(body))
+	req.Header.Set("Authorization", "Bearer "+accessToken)
+	req.Header.Set("Content-Type", "application/json")
+	r.ServeHTTP(w, req)
+
+	// Test Token Refresh
+	refreshData := map[string]string{
+		"refresh_token": refreshToken,
+	}
+	body, _ = json.Marshal(refreshData)
+	w = httptest.NewRecorder()
+	req, _ = http.NewRequest("POST", "/token/refresh", bytes.NewBuffer(body))
+	req.Header.Set("Content-Type", "application/json")
+	r.ServeHTTP(w, req)
+
+	// Test Logout
+	w = httptest.NewRecorder()
+	req, _ = http.NewRequest("POST", "/logout", bytes.NewBuffer([]byte{}))
+	req.Header.Set("Authorization", "Bearer "+accessToken)
+	r.ServeHTTP(w, req)
+}
