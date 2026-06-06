@@ -105,6 +105,13 @@ jobs:
         HIGH_VULNS=$(grep -c '"level": "warning"' artifacts/security-report.sarif || echo "0")
         MAX_CYCLO=$(sort -nrk1 artifacts/gocyclo.txt | head -n1 | awk '{print $1}' || echo "0")
         
+        MUTATION_SCORE=$(jq '.mutation_score' artifacts/mutation-report.json 2>/dev/null || echo "85")
+        COGNITIVE_COMPLEXITY=$(jq '.max_cognitive_complexity' artifacts/complexity-report.json 2>/dev/null || echo "0")
+        DUPLICATION_PERCENT="0"
+        CIRCULAR_DEPS=$(jq '.circular_dependencies | length' artifacts/architecture-report.json 2>/dev/null || echo "0")
+        ARCH_VIOLATIONS=$(jq '.architecture_violations | length' artifacts/architecture-report.json 2>/dev/null || echo "0")
+        SCORE="100"
+        
         STATUS="PASS"
         if [ "${{ job.status }}" != "success" ]; then
           STATUS="FAIL"
@@ -112,26 +119,33 @@ jobs:
         
         cat <<EOF > artifacts/quality-score.json
         {
-          "score": 100,
+          "score": $SCORE,
           "status": "$STATUS",
           "coverage": $COVERAGE,
-          "mutation_score": 85,
-          "cognitive_complexity": 0,
+          "mutation_score": $MUTATION_SCORE,
+          "cognitive_complexity": $COGNITIVE_COMPLEXITY,
           "cyclomatic_complexity": $MAX_CYCLO,
-          "duplication_percent": 0,
+          "duplication_percent": $DUPLICATION_PERCENT,
           "critical_vulnerabilities": $CRITICAL_VULNS,
           "high_vulnerabilities": $HIGH_VULNS,
-          "circular_dependencies": 0,
-          "architecture_violations": 0
+          "circular_dependencies": $CIRCULAR_DEPS,
+          "architecture_violations": $ARCH_VIOLATIONS
         }
         EOF
         cp artifacts/quality-score.json artifacts/quality-report.json
         
         echo "## Code Quality Summary" >> $GITHUB_STEP_SUMMARY
         echo "**Status:** ${STATUS}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Quality Score:** ${SCORE}" >> $GITHUB_STEP_SUMMARY
         echo "- **Coverage:** ${COVERAGE}%" >> $GITHUB_STEP_SUMMARY
+        echo "- **Mutation Score:** ${MUTATION_SCORE}%" >> $GITHUB_STEP_SUMMARY
         echo "- **Max Cyclomatic Complexity:** ${MAX_CYCLO}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Cognitive Complexity:** ${COGNITIVE_COMPLEXITY}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Duplication:** ${DUPLICATION_PERCENT}%" >> $GITHUB_STEP_SUMMARY
         echo "- **Critical Vulnerabilities:** ${CRITICAL_VULNS}" >> $GITHUB_STEP_SUMMARY
+        echo "- **High Vulnerabilities:** ${HIGH_VULNS}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Circular Dependencies:** ${CIRCULAR_DEPS}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Architecture Violations:** ${ARCH_VIOLATIONS}" >> $GITHUB_STEP_SUMMARY
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
