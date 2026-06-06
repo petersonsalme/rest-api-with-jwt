@@ -73,6 +73,48 @@ func TestIntegration(t *testing.T) {
 	req.Header.Set("Content-Type", "application/json")
 	r.ServeHTTP(w, req)
 
+	// Test Login invalid credentials
+	badLoginData := map[string]string{
+		"username": "wrong",
+		"password": "wrong",
+	}
+	badBody, _ := json.Marshal(badLoginData)
+	w = httptest.NewRecorder()
+	req, _ = http.NewRequest("POST", "/login", bytes.NewBuffer(badBody))
+	req.Header.Set("Content-Type", "application/json")
+	r.ServeHTTP(w, req)
+
+	// Test Logout without token
+	w = httptest.NewRecorder()
+	req, _ = http.NewRequest("POST", "/logout", bytes.NewBuffer([]byte{}))
+	r.ServeHTTP(w, req)
+
+	// Test CreateTodo without token
+	w = httptest.NewRecorder()
+	req, _ = http.NewRequest("POST", "/todo", bytes.NewBuffer(body))
+	req.Header.Set("Content-Type", "application/json")
+	r.ServeHTTP(w, req)
+
+	// Test CreateTodo invalid json with token
+	w = httptest.NewRecorder()
+	req, _ = http.NewRequest("POST", "/todo", bytes.NewBuffer([]byte(`{`)))
+	req.Header.Set("Authorization", "Bearer "+accessToken)
+	req.Header.Set("Content-Type", "application/json")
+	r.ServeHTTP(w, req)
+
+	// Test Refresh token invalid JSON
+	w = httptest.NewRecorder()
+	req, _ = http.NewRequest("POST", "/token/refresh", bytes.NewBuffer([]byte(`{`)))
+	r.ServeHTTP(w, req)
+
+	// Test Refresh token invalid token format
+	badRefresh := map[string]string{"refresh_token": "invalid"}
+	badRefreshBody, _ := json.Marshal(badRefresh)
+	w = httptest.NewRecorder()
+	req, _ = http.NewRequest("POST", "/token/refresh", bytes.NewBuffer(badRefreshBody))
+	req.Header.Set("Content-Type", "application/json")
+	r.ServeHTTP(w, req)
+
 	// Test Logout
 	w = httptest.NewRecorder()
 	req, _ = http.NewRequest("POST", "/logout", bytes.NewBuffer([]byte{}))
