@@ -43,6 +43,7 @@ jobs:
         if (( $(echo "$COVERAGE < 80.0" | bc -l) )); then echo "Gate failed: coverage ($COVERAGE) < 80%"; exit 1; fi
 
     - name: Run Vulnerability Check
+      if: success() || failure()
       run: |
         export PATH=$PATH:$(go env GOPATH)/bin
         govulncheck -format sarif ./... > artifacts/security-report.sarif || true
@@ -53,6 +54,7 @@ jobs:
         if [ "$CRITICAL_VULNS" -gt 0 ]; then echo "Gate failed: critical_vulnerabilities ($CRITICAL_VULNS) > 0"; exit 1; fi
 
     - name: Run Complexity Check
+      if: success() || failure()
       run: |
         export PATH=$PATH:$(go env GOPATH)/bin
         gocyclo -avg . > artifacts/gocyclo.txt || true
@@ -73,6 +75,7 @@ jobs:
         if [ "${MAX_CYCLO%.*}" -gt 15 ]; then echo "Gate failed: max_cyclomatic_complexity ($MAX_CYCLO) > 15"; exit 1; fi
 
     - name: Run Mutation Testing & Architecture Checks
+      if: success() || failure()
       run: |
         # Simulated metrics as go-mutesting was stubbed
         MUTATION_SCORE=85
