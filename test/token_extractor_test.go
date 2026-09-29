@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/petersonsalme/golang-rest-api/middleware"
+	"github.com/petersonsalme/rest-api-with-jwt/middleware"
 )
 
 // TestGivenValidAuthorizationMustReturnToken

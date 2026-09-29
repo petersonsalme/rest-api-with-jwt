@@ -1,5 +1,7 @@
 # REST API with JWT
 
+[![Go CI](https://github.com/petersonsalme/rest-api-with-jwt/actions/workflows/go-ci.yml/badge.svg)](https://github.com/petersonsalme/rest-api-with-jwt/actions/workflows/go-ci.yml)
+
 A Go-based REST API showcasing authentication using JSON Web Tokens (JWT). 
 
 ## Running Locally

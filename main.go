@@ -4,10 +4,10 @@ import (
 	"log"
 
 	"github.com/joho/godotenv"
-	"github.com/petersonsalme/golang-rest-api/middleware"
+	"github.com/petersonsalme/rest-api-with-jwt/middleware"
 
-	"github.com/petersonsalme/golang-rest-api/redis"
-	"github.com/petersonsalme/golang-rest-api/router"
+	"github.com/petersonsalme/rest-api-with-jwt/redis"
+	"github.com/petersonsalme/rest-api-with-jwt/router"
 
 	"github.com/gin-gonic/gin"
 )

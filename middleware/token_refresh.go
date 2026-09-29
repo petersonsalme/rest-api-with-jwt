@@ -6,10 +6,10 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/petersonsalme/golang-rest-api/redis"
+	"github.com/petersonsalme/rest-api-with-jwt/redis"
 
-	"github.com/golang-jwt/jwt/v5"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 // Refresh Refresh

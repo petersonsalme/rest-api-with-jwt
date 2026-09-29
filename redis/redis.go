@@ -1,16 +1,20 @@
 package redis
 
 import (
+	"context"
 	"log"
 	"os"
 	"strconv"
 	"time"
 
-	"github.com/go-redis/redis"
-	"github.com/petersonsalme/golang-rest-api/model"
+	"github.com/petersonsalme/rest-api-with-jwt/model"
+	"github.com/redis/go-redis/v9"
 )
 
-var client *redis.Client
+var (
+	client *redis.Client
+	ctx    = context.Background()
+)
 
 // Connect should connect to Redis
 func Connect() *redis.Client {
@@ -24,7 +28,7 @@ func Connect() *redis.Client {
 		Addr: dsn,
 	})
 
-	if _, err := client.Ping().Result(); err != nil {
+	if _, err := client.Ping(ctx).Result(); err != nil {
 		log.Fatal(err.Error())
 	}
 
@@ -37,11 +41,11 @@ func CreateAuth(userid uint64, token *model.Token) error {
 	rt := time.Unix(token.RtExpires, 0)
 	now := time.Now()
 
-	errAccess := client.Set(token.AccessUUID, strconv.Itoa(int(userid)), at.Sub(now)).Err()
+	errAccess := client.Set(ctx, token.AccessUUID, strconv.Itoa(int(userid)), at.Sub(now)).Err()
 	if errAccess != nil {
 		return errAccess
 	}
-	errRefresh := client.Set(token.RefreshUUID, strconv.Itoa(int(userid)), rt.Sub(now)).Err()
+	errRefresh := client.Set(ctx, token.RefreshUUID, strconv.Itoa(int(userid)), rt.Sub(now)).Err()
 	if errRefresh != nil {
 		return errRefresh
 	}
@@ -50,7 +54,7 @@ func CreateAuth(userid uint64, token *model.Token) error {
 
 // FetchAuth FetchAuth
 func FetchAuth(authD *model.AccessDetails) (uint64, error) {
-	userid, err := client.Get(authD.AccessUUID).Result()
+	userid, err := client.Get(ctx, authD.AccessUUID).Result()
 	if err != nil {
 		return 0, err
 	}
@@ -60,7 +64,7 @@ func FetchAuth(authD *model.AccessDetails) (uint64, error) {
 
 // DeleteAuth DeleteAuth
 func DeleteAuth(givenUUID string) (int64, error) {
-	deleted, err := client.Del(givenUUID).Result()
+	deleted, err := client.Del(ctx, givenUUID).Result()
 	if err != nil {
 		return 0, err
 	}

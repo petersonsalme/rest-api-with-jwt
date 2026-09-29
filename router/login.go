@@ -4,9 +4,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/petersonsalme/golang-rest-api/middleware"
-	"github.com/petersonsalme/golang-rest-api/model"
-	"github.com/petersonsalme/golang-rest-api/redis"
+	"github.com/petersonsalme/rest-api-with-jwt/middleware"
+	"github.com/petersonsalme/rest-api-with-jwt/model"
+	"github.com/petersonsalme/rest-api-with-jwt/redis"
 )
 
 var user = model.User{

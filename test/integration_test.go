@@ -9,9 +9,9 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/petersonsalme/golang-rest-api/middleware"
-	"github.com/petersonsalme/golang-rest-api/redis"
-	"github.com/petersonsalme/golang-rest-api/router"
+	"github.com/petersonsalme/rest-api-with-jwt/middleware"
+	"github.com/petersonsalme/rest-api-with-jwt/redis"
+	"github.com/petersonsalme/rest-api-with-jwt/router"
 )
 
 func setupRouter() *gin.Engine {

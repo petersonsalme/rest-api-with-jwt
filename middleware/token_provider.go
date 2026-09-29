@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/petersonsalme/golang-rest-api/model"
+	"github.com/petersonsalme/rest-api-with-jwt/model"
 )
 
 // CreateToken creates the token

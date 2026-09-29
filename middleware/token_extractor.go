@@ -6,7 +6,7 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/petersonsalme/golang-rest-api/model"
+	"github.com/petersonsalme/rest-api-with-jwt/model"
 
 	"github.com/golang-jwt/jwt/v5"
 )

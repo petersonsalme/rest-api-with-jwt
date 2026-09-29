@@ -3,8 +3,8 @@ package test
 import (
 	"testing"
 
-	"github.com/petersonsalme/golang-rest-api/middleware"
-	"github.com/petersonsalme/golang-rest-api/model"
+	"github.com/petersonsalme/rest-api-with-jwt/middleware"
+	"github.com/petersonsalme/rest-api-with-jwt/model"
 )
 
 // TestGivenValidUserIdShouldCreateToken
