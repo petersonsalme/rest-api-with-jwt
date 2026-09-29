@@ -2,6 +2,14 @@
 
 A Go-based REST API showcasing authentication using JSON Web Tokens (JWT). 
 
+## Running Locally
+
+```bash
+cp .env.example .env   # then set ACCESS_SECRET and REFRESH_SECRET
+docker run -d -p 6379:6379 redis:6
+go run .
+```
+
 ## Endpoints
 
 - **`POST /login`**: Authenticate using username and password (in JSON body). Returns `access_token` and `refresh_token`.

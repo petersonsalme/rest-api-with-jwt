@@ -15,9 +15,9 @@ import (
 var routerEngine *gin.Engine
 
 func init() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
+	// .env is optional: variables can also come from the environment
+	if err := godotenv.Load(); err != nil {
+		log.Println("No .env file found, using environment variables")
 	}
 
 	redis.Connect()
