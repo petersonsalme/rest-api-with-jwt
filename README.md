@@ -39,3 +39,11 @@ This repository contains an OpenAPI 3.0 specification file: `openapi.yaml`. You 
 
 ## Important Note for Deployment
 Ensure the application is deployed behind HTTPS (TLS) to prevent man-in-the-middle attacks from intercepting the JWTs.
+## Roadmap
+
+- [ ] Replace the hardcoded user in `router/login.go` with users stored in Postgres and passwords hashed with bcrypt.
+- [ ] Persist todos; `POST /todo` currently only echoes the request back.
+- [ ] Rotate refresh tokens on use and detect reuse of an old refresh token.
+- [ ] Rate-limit `/login` to slow down brute-force attempts.
+- [ ] Replace the fixed Redis address in the integration tests with Testcontainers.
+- [ ] Structured logging and graceful shutdown.
