@@ -1,6 +1,6 @@
 module github.com/petersonsalme/rest-api-with-jwt
 
-go 1.25.0
+go 1.26.4
 
 require (
 	github.com/gin-gonic/gin v1.9.1
