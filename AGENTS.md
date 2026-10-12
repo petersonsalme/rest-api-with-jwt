@@ -26,6 +26,8 @@ rest-api-with-jwt/
 
 ## Regras e Comandos
 
+- Prefix shell commands with `rtk` (see `.agents/rules/rtk.md`).
+
 1. **Testes e Build:**
    - Executar testes: `go test -v ./...`
    - Checagem de build: `go build -o /dev/null .`
@@ -37,3 +39,5 @@ rest-api-with-jwt/
    - Respeitar a especificação em `openapi.yaml` ao alterar ou adicionar endpoints.
    - Commits seguindo Conventional Commits (`feat:`, `fix:`, `refactor:`, `test:`).
    - Comunicação com o usuário em Português do Brasil; código e documentação técnica em Inglês.
+
+@.agents/rules/rtk.md
